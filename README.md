@@ -7,6 +7,8 @@ The web interface is really nice but still lacks some advanced features (which d
 
 ## Usage
 
+Create a .env file following the .env.example file.
+
 `pip install -r requirements.txt` and run one of the scripts below.
 
 **Note:** for all the features to work properly (e.g. automatic token generation), you need to have
