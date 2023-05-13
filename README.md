@@ -9,6 +9,14 @@ The web interface is really nice but still lacks some advanced features (which d
 
 Create a .env file following the .env.example file.
 
+### .env
+
+- `ACH_PATH`: path to the `ACH` executable (default: `ACH`)
+- `BASE_URL`: URL of your Cozy instance (required, example: `https://johndoe.mycozy.cloud/`)
+- `TOKEN`: authentification token (automatically set, you don't have to set it yourself)
+
+### Command-line
+
 `pip install -r requirements.txt` and run one of the scripts below.
 
 **Note:** for all the features to work properly (e.g. automatic token generation), you need to have

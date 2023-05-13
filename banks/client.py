@@ -12,10 +12,12 @@ if not BASE_URL:
 
 client = requests.Session()
 
+ACH_PATH = os.environ.get("ACH_PATH", "ACH")
+
 
 def update_token(force=False):
     if force or not (token := os.environ.get("TOKEN")):
-        cmdline = ["ach", "token", "--url", BASE_URL, "io.cozy.bank.accounts", "io.cozy.bank.operations"]
+        cmdline = [ACH_PATH, "token", "--url", BASE_URL, "io.cozy.bank.accounts", "io.cozy.bank.operations"]
         token = subprocess.check_output(cmdline, shell=True).decode("utf-8").strip()
         os.environ["TOKEN"] = token
     dotenv.set_key(dotenv_file, "TOKEN", token)
