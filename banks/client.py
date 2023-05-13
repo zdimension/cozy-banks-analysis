@@ -53,3 +53,14 @@ def get_docs(doctype):
 
     # decode JSON
     return [d["doc"] for d in r.json()["rows"] if "_design" not in d["id"]]
+
+
+def get_accounts():
+    res = get_docs("io.cozy.bank.accounts")
+    for acc in res:
+        acc["__displayLabel"] = acc.get("shortLabel", acc.get("label", "<NO LABEL>"))
+    return res
+
+
+def get_operations():
+    return get_docs("io.cozy.bank.operations")

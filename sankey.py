@@ -4,14 +4,14 @@ from collections import defaultdict
 
 import pyperclip
 
-from banks.client import get_docs
+from banks.client import get_operations, get_accounts
 from banks.cozy_data import CAT, CATNAMES
 
-accs = get_docs("io.cozy.bank.accounts")
-ops = get_docs("io.cozy.bank.operations")
+accs = get_accounts()
+ops = get_operations()
 
 for acc in accs:
-    acc["owner"] = acc["shortLabel"].split(" ")[0]
+    acc["owner"] = acc["shortLabel"].split(" ")[0]  # TODO: ?
 
 for op in ops:
     op["category"] = next(filter(
@@ -51,22 +51,3 @@ for (user, cat), val in mat.items():
         src = "+" + src
     res += f"{src} [{round(val, 2)}] {dst}\n"
 pyperclip.copy(res)
-
-exit()
-fig = go.Figure(data=[go.Sankey(
-    node=dict(
-        pad=15,
-        thickness=20,
-        line=dict(color="black", width=0.5),
-        label=["A1", "A2", "B1", "B2", "C1", "C2"],
-        color="blue"
-    ),
-    link=dict(
-        # indices correspond to labels, eg A1, A2, A1, B1, ...
-        source=[0, 1, 0, 2, 3, 3],
-        target=[2, 3, 3, 4, 4, 5],
-        value=[8, 4, 2, 8, 4, 2]
-    ))])
-
-fig.update_layout(title_text="Basic Sankey Diagram", font_size=10)
-fig.show()

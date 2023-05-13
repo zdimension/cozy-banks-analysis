@@ -5,10 +5,10 @@ from datetime import datetime
 import numpy as np
 import plotly.graph_objects as go
 
-from banks.client import get_docs
+from banks.client import get_accounts, get_operations
 
-accounts = get_docs("io.cozy.bank.accounts")
-operations = get_docs("io.cozy.bank.operations")
+accounts = get_accounts()
+operations = get_operations()
 
 
 def get_date(o):
