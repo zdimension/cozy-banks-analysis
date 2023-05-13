@@ -1,2 +1,5 @@
 .env
 .idea
+*.json
+*.csv
+token.js

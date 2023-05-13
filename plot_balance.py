@@ -1,47 +1,11 @@
-import os
+# coding: utf-8
 from collections import defaultdict
 from datetime import datetime
 
 import numpy as np
 import plotly.graph_objects as go
-import requests
-from dotenv import load_dotenv
 
-# Press Maj+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-BASE_URL = "https://zdimension.mycozy.cloud/"
-
-load_dotenv()
-
-token = os.getenv("TOKEN")
-if token is None:
-    print("Please set the TOKEN environment variable")
-    exit(1)
-print(token)
-
-client = requests.Session()
-client.headers.update({"Authorization": "Bearer " + token})
-
-
-def get_docs(doctype):
-    """
-    Get all documents of a given doctype
-    """
-    req_url = BASE_URL + "data/" + doctype + "/_all_docs?include_docs=true"
-    print(req_url)
-    r = client.get(req_url)
-    print(r)
-
-    # check if the request is successful and decode JSON
-    if r.status_code != 200:
-        print("Error while fetching operations")
-        print(r.text)
-        exit(1)
-
-    # decode JSON
-    return [d["doc"] for d in r.json()["rows"] if "_design" not in d["id"]]
-
+from banks.client import get_docs
 
 accounts = get_docs("io.cozy.bank.accounts")
 operations = get_docs("io.cozy.bank.operations")
