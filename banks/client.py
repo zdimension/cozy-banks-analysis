@@ -10,6 +10,9 @@ if not BASE_URL:
     print("BASE_URL environment variable must be set")
     exit(1)
 
+if not BASE_URL.endswith("/"):
+    BASE_URL += "/"
+
 client = requests.Session()
 
 ACH_PATH = os.environ.get("ACH_PATH", "ACH")
