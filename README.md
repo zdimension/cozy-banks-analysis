@@ -9,6 +9,9 @@ The web interface is really nice but still lacks some advanced features (which d
 
 `pip install -r requirements.txt` and run one of the scripts below.
 
+**Note:** for all the features to work properly (e.g. automatic token generation), you need to have
+[`ach`](https://github.com/cozy/ACH) installed and in your `PATH`.
+
 ## Scripts
 
 ### `check_balance`
@@ -50,7 +53,8 @@ This plots the balance of your accounts over time using Plotly.
 
 This script generates a Sankey diagram of your transactions. They're grouped by their Cozy category.
 
-The output is in your clipboard, by default. The format is the one used by [Sankeymatic](https://sankeymatic.com/build/).
+The output is in your clipboard, by default. The format is the one used
+by [Sankeymatic](https://sankeymatic.com/build/).
 
 ## License
 
