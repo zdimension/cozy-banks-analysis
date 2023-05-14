@@ -3,3 +3,4 @@
 *.json
 *.csv
 token.js
+__pycache__
