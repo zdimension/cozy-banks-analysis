@@ -64,7 +64,7 @@ def get_accounts():
 
 def get_operations():
     res = get_docs("io.cozy.bank.operations")
-    if no_amount := [op for op in res if "amount" not in op]:
+    if no_amount := [op for op in res if op.get("amount") is None]:
         print("Some operations have no `amount` field:")
         for op in no_amount:
             print(op["_id"], op["date"], op["label"])
