@@ -25,9 +25,12 @@
             plotly
             tabulate
             numpy
+            pre-commit-hooks
+            yapf
           ]))
 
         ach
+        pre-commit
       ];
     };
   };
