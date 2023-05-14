@@ -20,8 +20,12 @@ ACH_PATH = os.environ.get("ACH_PATH", "ACH")
 
 def update_token(force=False):
     if force or not (token := os.environ.get("TOKEN")):
-        cmdline = [ACH_PATH, "token", "--url", BASE_URL, "io.cozy.bank.accounts", "io.cozy.bank.operations"]
-        token = subprocess.check_output(cmdline, shell=True).decode("utf-8").strip()
+        cmdline = [
+            ACH_PATH, "token", "--url", BASE_URL, "io.cozy.bank.accounts",
+            "io.cozy.bank.operations"
+        ]
+        token = subprocess.check_output(cmdline,
+                                        shell=True).decode("utf-8").strip()
         os.environ["TOKEN"] = token
     dotenv.set_key(dotenv_file, "TOKEN", token)
     client.headers.update({"Authorization": "Bearer " + token})
@@ -58,7 +62,8 @@ def get_docs(doctype):
 def get_accounts():
     res = get_docs("io.cozy.bank.accounts")
     for acc in res:
-        acc["__displayLabel"] = acc.get("shortLabel", acc.get("label", "<NO LABEL>"))
+        acc["__displayLabel"] = acc.get("shortLabel",
+                                        acc.get("label", "<NO LABEL>"))
     return res
 
 
