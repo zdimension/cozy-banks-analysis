@@ -11,7 +11,7 @@ accs = get_accounts()
 ops = get_operations()
 
 for acc in accs:
-    acc["owner"] = acc["shortLabel"].split(" ")[0]  # TODO: ?
+    acc["owner"] = acc["__displayLabel"].split(" ")[0]  # TODO: ?
 
 for op in ops:
     op["category"] = next(
