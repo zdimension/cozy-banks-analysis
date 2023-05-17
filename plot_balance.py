@@ -39,12 +39,13 @@ for account in accounts:
     x = [np.datetime64(o["date"]) for o in account_operations]
     x.append(np.datetime64(datetime.now().isoformat()))
     # step chart
-    fig.add_trace(go.Scatter(
-        x=x,
-        y=y,
-        mode="lines",
-        name=account["label"],
-        line={"shape": "hv"},
-    ))
+    fig.add_trace(
+        go.Scatter(
+            x=x,
+            y=y,
+            mode="lines",
+            name=account["label"],
+            line={"shape": "hv"},
+        ))
 
 fig.show()
