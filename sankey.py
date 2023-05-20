@@ -38,6 +38,7 @@ for op in ops:
 
 res = ""
 for (user, cat), val in mat.items():
+    val = round(val, 2)
     if val == 0:
         continue
     dst, src = user, CATNAMES[CAT[cat]]
