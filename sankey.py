@@ -13,18 +13,19 @@ ops = get_operations()
 for acc in accs:
     acc["owner"] = acc["__displayLabel"].split(" ")[0]  # TODO: ?
 
-ops = [
-    op for op in ops if CAT[op["__categoryId"]] not in {
-        "investmentBuySell",
-        "friendBorrowing",
-        "loanCredit",
-        "professionalExpenses",
-        "creditCardPayment",
-        "savings",
-        "internalTransfer",
-        "excludeFromBudgetCat",
-    }
-]
+# TODO(zdimension): Is this really useful?
+# ops = [
+#     op for op in ops if CAT[op["__categoryId"]] not in {
+#         "investmentBuySell",
+#         "friendBorrowing",
+#         "loanCredit",
+#         "professionalExpenses",
+#         "creditCardPayment",
+#         "savings",
+#         "internalTransfer",
+#         "excludeFromBudgetCat",
+#     }
+# ]
 
 accs = {acc["_id"]: acc for acc in accs}
 
