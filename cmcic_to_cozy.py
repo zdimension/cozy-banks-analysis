@@ -4,15 +4,15 @@ import os
 
 import pandas as pd
 
+from banks.client import parser, parse_args
 from banks.cozy_data import CAT
 
-parser = argparse.ArgumentParser()
 parser.add_argument("csv_file", help="CSV file to import")
 parser.add_argument("--cutoff",
                     help="Cutoff date (inclusive) in YYYY-MM-DD format")
 parser.add_argument("--vendor", help="Account vendor ID", required=True)
 parser.add_argument("--account", help="Account ID", required=True)
-args = parser.parse_args()
+args = parse_args()
 
 df = pd.read_csv(args.csv_file, sep=";", encoding="utf-8", decimal=",")
 

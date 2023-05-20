@@ -1,3 +1,4 @@
+import argparse
 import os
 import subprocess
 
@@ -40,14 +41,14 @@ def get_docs(doctype):
     Get all documents of a given doctype
     """
     req_url = BASE_URL + "data/" + doctype + "/_all_docs?include_docs=true"
-    print(req_url)
+    log(req_url)
     r = client.get(req_url)
-    print(r)
+    log(r)
 
     # check if the request is successful and decode JSON
     if r.status_code != 200:
         if "Expired token" in r.text:
-            print("Token expired, getting new one")
+            log("Token expired, getting new one")
             update_token(True)
             return get_docs(doctype)
 
@@ -87,14 +88,33 @@ def get_category(op):
 
     return op.get("automaticCategoryId", "0")
 
+
 def get_operations():
     res = get_docs("io.cozy.bank.operations")
     if no_amount := [op for op in res if op.get("amount") is None]:
-        print("Some operations have no `amount` field:")
+        log("Some operations have no `amount` field:")
         for op in no_amount:
-            print(op["_id"], op["date"], op["label"])
+            log(op["_id"], op["date"], op["label"])
             op["amount"] = 0
-        print("The script will assume the amount is zero.")
+        log("The script will assume the amount is zero.")
     for op in res:
         op["__categoryId"] = get_category(op)
     return res
+
+
+parser = argparse.ArgumentParser()
+# --silent / -s
+parser.add_argument("--silent", "-s", help="Don't print warnings", action="store_true")
+
+args: argparse.Namespace
+
+
+def parse_args():
+    global args
+    args = parser.parse_args()
+    return args
+
+
+def log(*c):
+    if not args.silent:
+        print(*c)
