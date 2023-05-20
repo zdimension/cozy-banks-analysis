@@ -13,14 +13,8 @@ ops = get_operations()
 for acc in accs:
     acc["owner"] = acc["__displayLabel"].split(" ")[0]  # TODO: ?
 
-for op in ops:
-    op["category"] = next(
-        filter(None, (op.get(name, None)
-                      for name in ("manualCategoryId", "cozyCategoryId",
-                                   "automaticCategoryId"))))
-
 ops = [
-    op for op in ops if CAT[op["category"]] not in {
+    op for op in ops if CAT[op["__categoryId"]] not in {
         "investmentBuySell",
         "friendBorrowing",
         "loanCredit",
@@ -37,7 +31,7 @@ accs = {acc["_id"]: acc for acc in accs}
 mat = defaultdict(lambda: 0)
 for op in ops:
     try:
-        cat = op["category"]
+        cat = op["__categoryId"]
         mat[(accs[op["account"]]["owner"], cat)] += op["amount"]
     except:
         raise

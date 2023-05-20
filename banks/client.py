@@ -67,6 +67,26 @@ def get_accounts():
     return res
 
 
+def get_category(op):
+    if manual := op.get("manualCategoryId"):
+        return manual
+
+    # same logic and constants as in Banks
+    # from https://github.com/cozy/cozy-libs/blob/master/packages/cozy-doctypes/src/banking/BankTransaction.js
+    LOCAL_MODEL_USAGE_THRESHOLD = 0.8
+    GLOBAL_MODEL_USAGE_THRESHOLD = 0.15
+
+    if (local := op.get("localCategoryId")) and op.get("localCategoryProba", -1) > LOCAL_MODEL_USAGE_THRESHOLD:
+        return local
+
+    if (cozy := op.get("cozyCategoryId")) and op.get("cozyCategoryProba", -1) > GLOBAL_MODEL_USAGE_THRESHOLD:
+        return cozy
+
+    if local is None and cozy is None:
+        return "0"
+
+    return op.get("automaticCategoryId", "0")
+
 def get_operations():
     res = get_docs("io.cozy.bank.operations")
     if no_amount := [op for op in res if op.get("amount") is None]:
@@ -75,4 +95,6 @@ def get_operations():
             print(op["_id"], op["date"], op["label"])
             op["amount"] = 0
         print("The script will assume the amount is zero.")
+    for op in res:
+        op["__categoryId"] = get_category(op)
     return res
