@@ -5,6 +5,12 @@ from pandasql import sqldf, PandaSQL, PandaSQLException
 
 from banks.client import get_operations, get_accounts, parser, parse_args
 
+from prompt_toolkit import PromptSession
+from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.history import InMemoryHistory
+from prompt_toolkit.lexers import PygmentsLexer
+from pygments.lexers.sql import SqlLexer
+
 pysqldf = lambda q: sqldf(q, globals())
 
 parser.add_argument("query", help="Query to search for", nargs="?")
@@ -33,12 +39,6 @@ operations.drop([
 operations["category"] = operations["__categoryId"]
 
 if not args.query:
-    from prompt_toolkit import PromptSession
-    from prompt_toolkit.completion import WordCompleter
-    from prompt_toolkit.history import InMemoryHistory
-    from prompt_toolkit.lexers import PygmentsLexer
-    from pygments.lexers.sql import SqlLexer
-
     tables = [accounts, operations]
     columns = [*{col for table in tables for col in table.columns}]
     sql = PandaSQL()
