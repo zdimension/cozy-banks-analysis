@@ -5,8 +5,9 @@ from datetime import datetime
 import numpy as np
 import plotly.graph_objects as go
 
-from banks.client import get_accounts, get_operations
+from banks.client import get_accounts, get_operations, parse_args
 
+parse_args()
 accounts = get_accounts()
 operations = get_operations()
 

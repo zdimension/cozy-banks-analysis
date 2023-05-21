@@ -4,13 +4,13 @@ from collections import defaultdict
 
 from utils import copy_to_clipboard
 
-from banks.client import get_operations, get_accounts, parser
+from banks.client import get_operations, get_accounts, parser, parse_args
 from banks.cozy_data import CAT, CATNAMES
 
 parser.add_argument("--balance", help="Show balance", action="store_true")
 parser.add_argument("--owner", help="Assume account names are in the form 'Bob Checkings' and group by 'Bob'",
                     action="store_true")
-args = parser.parse_args()
+args = parse_args()
 
 accs = get_accounts()
 ops = get_operations()

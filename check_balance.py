@@ -3,8 +3,9 @@ from itertools import groupby
 
 from tabulate import tabulate
 
-from banks.client import get_operations, get_accounts
+from banks.client import get_operations, get_accounts, parse_args
 
+parse_args()
 accounts = get_accounts()
 operations = get_operations()
 operations.sort(key=lambda o: o["account"])
