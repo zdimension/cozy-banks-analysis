@@ -14,18 +14,36 @@
     formatter.x86_64-linux = pkgs.alejandra;
 
     devShells.x86_64-linux.default = pkgs.mkShell {
-      nativeBuildInputs = with pkgs; [
+      nativeBuildInputs = with pkgs; let
+        pandasql = pkgs.python3Packages.buildPythonPackage rec {
+          pname = "pandasql";
+          version = "0.7.3";
+
+          src = pkgs.python3Packages.fetchPypi {
+            inherit version;
+            inherit pname;
+            sha256 = "sha256-HrJIhpCGQ1p9hSgevZ/lJdadnZVKDc64VPcajQ/Y3mk=";
+          };
+
+          buildInputs = with python3Packages; [sqlalchemy pandas];
+          doCheck = false;
+        };
+      in [
         (python3.withPackages (ps:
           with ps;
           with python3Packages; [
             pandas
+            pandasql
             python-dotenv
+            pygments
             pyperclip
             requests
             plotly
             tabulate
             numpy
             pre-commit-hooks
+            sqlalchemy
+            prompt-toolkit
             yapf
           ]))
 
