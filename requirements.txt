@@ -12,3 +12,4 @@ wheel~=0.40.0
 setuptools~=67.8.0
 Pygments~=2.15.1
 prompt-toolkit~=3.0.38
+sqlalchemy~=2.0.1
