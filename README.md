@@ -116,7 +116,9 @@ GROUP BY
 4   Life Insurance (Small Bank)     698.15
 ```
 
-An REPL mode, with syntax highlighting and autocompletion, is also available. 
+An REPL mode, with syntax highlighting and autocompletion, is also available:
+
+![REPL](https://i.imgur.com/rGGpi4Y.png)
 
 ## License
 
