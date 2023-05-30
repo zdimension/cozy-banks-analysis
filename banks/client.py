@@ -1,6 +1,8 @@
 import argparse
 import os
+import pathlib
 import subprocess
+import tempfile
 
 import requests
 
@@ -21,6 +23,13 @@ ACH_PATH = os.environ.get("ACH_PATH", "ACH")
 
 def update_token(force=False):
     if force or not (token := os.environ.get("TOKEN")):
+        try:
+            tmp_dir = pathlib.Path(tempfile.gettempdir())
+            for f in tmp_dir.glob(".ach-token*.json"):
+                print("Deleting old token file", f, "...")
+                f.unlink()
+        except:
+            print("Unable to delete ACH token file")
         cmdline = [
             ACH_PATH, "token", "--url", BASE_URL, "io.cozy.bank.accounts",
             "io.cozy.bank.operations"
