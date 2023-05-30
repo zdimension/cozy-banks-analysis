@@ -2,14 +2,13 @@
 
 import pandas as pd
 from pandasql import sqldf, PandaSQL, PandaSQLException
-
-from banks.client import get_operations, get_accounts, parser, parse_args
-
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.lexers import PygmentsLexer
 from pygments.lexers.sql import SqlLexer
+
+from banks.client import get_operations, get_accounts, parser, parse_args
 
 pysqldf = lambda q: sqldf(q, globals())
 
@@ -19,23 +18,21 @@ args = parse_args()
 accs = get_accounts()
 ops = get_operations()
 
-accounts = pd.DataFrame(accs)
-accounts.drop([
+accounts = pd.DataFrame(accs).drop([
     "cozyMetadata",
     "metadata",
     "relationships"
-], axis=1, inplace=True)
+], axis=1)
 accounts["display"] = accounts["__displayLabel"]
 
-operations = pd.DataFrame(ops)
-operations.drop([
+operations = pd.DataFrame(ops).drop([
     "bills",
     "cozyMetadata",
     "currency",
     "metadata",
     "reimbursements",
     "relationships",
-], axis=1, inplace=True)
+], axis=1)
 operations["category"] = operations["__categoryId"]
 
 if not args.query:
