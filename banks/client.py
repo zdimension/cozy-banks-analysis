@@ -35,7 +35,7 @@ def update_token(force=False):
             "io.cozy.bank.operations"
         ]
         token = subprocess.check_output(cmdline,
-                                        shell=True).decode("utf-8").strip()
+                                        shell=False).decode("utf-8").strip()
         os.environ["TOKEN"] = token
     dotenv.set_key(dotenv_file, "TOKEN", token)
     client.headers.update({"Authorization": "Bearer " + token})
