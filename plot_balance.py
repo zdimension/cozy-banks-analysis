@@ -45,7 +45,7 @@ for account in accounts:
             x=x,
             y=y,
             mode="lines",
-            name=account["label"],
+            name=account["__displayLabel"],
             line={"shape": "hv"},
         ))
 
