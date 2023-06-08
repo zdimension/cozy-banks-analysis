@@ -2,6 +2,9 @@
 
 from banks.client import *
 
+parse_args()
+_ = get_accounts()
+
 with open("token.js", "w") as fp:
     fp.write(
         f'module.exports = {{ token: "{dotenv.get_key(dotenv_file, "TOKEN")}" }}'
