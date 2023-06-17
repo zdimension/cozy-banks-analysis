@@ -10,10 +10,18 @@ from banks.cozy_data import CAT, CATNAMES
 parser.add_argument("--balance", "-b", help="Show balance", action="store_true")
 parser.add_argument("--owner", help="Assume account names are in the form 'Bob Checkings' and group by 'Bob'",
                     action="store_true")
+parser.add_argument("--from", "-f", help="Filter operations from this date")
+parser.add_argument("--to", "-t", help="Filter operations to this date")
 args = parse_args()
 
 accs = get_accounts()
 ops = get_operations()
+
+if getattr(args, "from"):
+    ops = [op for op in ops if op["date"] >= getattr(args, "from")]
+
+if args.to:
+    ops = [op for op in ops if op["date"] <= args.to]
 
 if args.owner:
     for acc in accs:
