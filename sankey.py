@@ -30,20 +30,6 @@ else:
     for acc in accs:
         acc["owner"] = "Bank"
 
-# TODO(zdimension): Is this really useful?
-# ops = [
-#     op for op in ops if CAT[op["__categoryId"]] not in {
-#         "investmentBuySell",
-#         "friendBorrowing",
-#         "loanCredit",
-#         "professionalExpenses",
-#         "creditCardPayment",
-#         "savings",
-#         "internalTransfer",
-#         "excludeFromBudgetCat",
-#     }
-# ]
-
 accs = {acc["_id"]: acc for acc in accs}
 
 mat = defaultdict(lambda: defaultdict(lambda: 0))
