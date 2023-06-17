@@ -4,3 +4,4 @@
 *.csv
 token.js
 __pycache__
+*.my.py
