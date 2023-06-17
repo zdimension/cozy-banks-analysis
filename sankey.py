@@ -61,6 +61,8 @@ for user, cats in mat.items():
         total = round(sum(cats.values()), 2)
         if total > 0:
             res += f"{user} [{total}] Balance {user}\n"
+        elif total < 0:
+            res += f"Balance (-) {user} [{-total}] {user}\n"
     for cat, val in cats.items():
         val = round(val, 2)
         if val == 0:
