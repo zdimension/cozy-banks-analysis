@@ -28,6 +28,20 @@
           buildInputs = with python3Packages; [sqlalchemy pandas];
           doCheck = false;
         };
+        currency-converter = pkgs.python3Packages.buildPythonPackage rec {
+          pname = "currency-converter";
+          version = "0.17.9";
+
+          src = pkgs.python3Packages.fetchPypi {
+            inherit version;
+            pname = "CurrencyConverter";
+            sha256 = "sha256-P4mu0VJRgc9XHSSwJ85opWd1d8UaJunKpqyL60MwJpY=";
+          };
+
+          buildInputs = with python3Packages; [setuptools-scm];
+
+          doCheck = false;
+        };
       in [
         (python3.withPackages (ps:
           with ps;
@@ -44,6 +58,7 @@
             pre-commit-hooks
             sqlalchemy
             prompt-toolkit
+            currency-converter
             yapf
           ]))
 
