@@ -20,6 +20,8 @@ client = requests.Session()
 
 ACH_PATH = os.environ.get("ACH_PATH", "ACH")
 
+USE_SHELL = os.name == "nt"
+
 
 def update_token(force=False):
     if force or not (token := os.environ.get("TOKEN")):
@@ -34,8 +36,12 @@ def update_token(force=False):
             ACH_PATH, "token", "--url", BASE_URL, "io.cozy.bank.accounts",
             "io.cozy.bank.operations"
         ]
-        token = subprocess.check_output(cmdline,
-                                        shell=False).decode("utf-8").strip()
+        try:
+            token = subprocess.check_output(cmdline,
+                                            shell=USE_SHELL).decode("utf-8").strip()
+        except FileNotFoundError:
+            print("ACH not found, please install it")
+            exit(1)
         os.environ["TOKEN"] = token
     dotenv.set_key(dotenv_file, "TOKEN", token)
     client.headers.update({"Authorization": "Bearer " + token})
