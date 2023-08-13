@@ -74,6 +74,24 @@ def get_docs(doctype):
     # decode JSON
     return [d["doc"] for d in r.json()["rows"] if "_design" not in d["id"]]
 
+def cozyize(doc):
+    return {k: v for k, v in doc.items() if not k.startswith("__")}
+
+def delete_many(doctype, docs):
+    """
+    Delete documents
+    """
+    req_url = BASE_URL + "data/" + doctype + "/_bulk_docs"
+    log(req_url)
+    docs = [{**cozyize(doc), "_deleted": True} for doc in docs]
+    r = client.post(req_url, json={"docs": docs})
+    log(r)
+
+    if r.status_code != 201:
+        print("Error while deleting documents")
+        print(r.text)
+        exit(1)
+
 
 def get_accounts():
     res = get_docs("io.cozy.bank.accounts")
