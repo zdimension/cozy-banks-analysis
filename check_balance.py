@@ -61,10 +61,14 @@ if args.curconv:
 
 acc_op = {k: list(v) for k, v in groupby(operations, lambda o: o["account"])}
 
-print(
-    tabulate([(acc["__displayLabel"], b := acc["balance"], cb := sum(
-        u["amount"]
-        for u in acc_op.get(acc["id"], ())), round(b - cb + 1e-7, 2))
-              for acc in accounts],
-             headers=["Account", "Balance", "Computed balance", "Difference"],
-             floatfmt=".2f"))
+headers = ["Account", "Balance", "Computed balance", "Difference", "Op count"]
+table_data = []
+for acc in accounts:
+    balance = acc["balance"]
+    computed_balance = sum(u["amount"] for u in acc_op.get(acc["id"], ()))
+    difference = round(balance - computed_balance + 1e-7, 2)
+    op_count = len(acc_op.get(acc["id"], ()))
+    table_data.append((acc["__displayLabel"], balance, computed_balance,
+                       difference, op_count))
+
+print(tabulate(table_data, headers=headers, floatfmt=".2f"))
