@@ -37,8 +37,8 @@ def update_token(force=False):
             "io.cozy.bank.operations"
         ]
         try:
-            token = subprocess.check_output(cmdline,
-                                            shell=USE_SHELL).decode("utf-8").strip()
+            token = subprocess.check_output(
+                cmdline, shell=USE_SHELL).decode("utf-8").strip()
         except FileNotFoundError:
             print("ACH not found, please install it")
             exit(1)
@@ -110,10 +110,12 @@ def get_category(op):
     LOCAL_MODEL_USAGE_THRESHOLD = 0.8
     GLOBAL_MODEL_USAGE_THRESHOLD = 0.15
 
-    if (local := op.get("localCategoryId")) and op.get("localCategoryProba", -1) > LOCAL_MODEL_USAGE_THRESHOLD:
+    if (local := op.get("localCategoryId")) and op.get(
+            "localCategoryProba", -1) > LOCAL_MODEL_USAGE_THRESHOLD:
         return local
 
-    if (cozy := op.get("cozyCategoryId")) and op.get("cozyCategoryProba", -1) > GLOBAL_MODEL_USAGE_THRESHOLD:
+    if (cozy := op.get("cozyCategoryId")) and op.get(
+            "cozyCategoryProba", -1) > GLOBAL_MODEL_USAGE_THRESHOLD:
         return cozy
 
     if local is None and cozy is None:
@@ -137,7 +139,10 @@ def get_operations():
 
 parser = argparse.ArgumentParser()
 # --silent / -s
-parser.add_argument("--silent", "-s", help="Don't print warnings", action="store_true")
+parser.add_argument("--silent",
+                    "-s",
+                    help="Don't print warnings",
+                    action="store_true")
 
 args: argparse.Namespace
 
@@ -149,5 +154,5 @@ def parse_args():
 
 
 def log(*c):
-    if not args.silent:
+    if args and not args.silent:
         print(*c)
