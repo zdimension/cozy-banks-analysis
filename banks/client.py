@@ -74,8 +74,10 @@ def get_docs(doctype):
     # decode JSON
     return [d["doc"] for d in r.json()["rows"] if "_design" not in d["id"]]
 
+
 def cozyize(doc):
     return {k: v for k, v in doc.items() if not k.startswith("__")}
+
 
 def delete_many(doctype, docs):
     """

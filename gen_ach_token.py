@@ -11,4 +11,6 @@ with open("token.js", "w") as fp:
     )
 
 print("Test by doing:")
-print(f"ach -t token.js --url {os.environ.get('BASE_URL', '<your cozy URL>')} export io.cozy.bank.accounts")
+print(
+    f"ach -t token.js --url {os.environ.get('BASE_URL', '<your cozy URL>')} export io.cozy.bank.accounts"
+)

@@ -48,10 +48,18 @@ def sankey(accs, ops, owner=False, balance=False):
 
 
 if __name__ == "__main__":
-    parser.add_argument("--balance", "-b", help="Show balance", action="store_true")
-    parser.add_argument("--owner", help="Assume account names are in the form 'Bob Checkings' and group by 'Bob'",
+    parser.add_argument("--balance",
+                        "-b",
+                        help="Show balance",
                         action="store_true")
-    parser.add_argument("--from", "-f", help="Filter operations from this date")
+    parser.add_argument(
+        "--owner",
+        help=
+        "Assume account names are in the form 'Bob Checkings' and group by 'Bob'",
+        action="store_true")
+    parser.add_argument("--from",
+                        "-f",
+                        help="Filter operations from this date")
     parser.add_argument("--to", "-t", help="Filter operations to this date")
     args = parse_args()
 
