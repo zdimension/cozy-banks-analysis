@@ -1,6 +1,7 @@
 # coding: utf-8
 import datetime
 from itertools import groupby
+import dateutil.parser
 
 from tabulate import tabulate
 
@@ -8,9 +9,13 @@ from banks.client import get_operations, get_accounts, parse_args, parser
 
 import currency_converter
 
-parser.add_argument("--until",
-                    "-u",
-                    help="Only show operations until this date")
+parser.add_argument("--after",
+                    "-a",
+                    help="Only show operations after this date")
+
+parser.add_argument("--before",
+                    "-b",
+                    help="Only show operations before this date")
 
 parser.add_argument(
     "--curconv",
@@ -22,8 +27,15 @@ parser.add_argument(
 args = parse_args()
 accounts = get_accounts()
 operations = get_operations()
-if args.until:
-    operations = [op for op in operations if op["date"] <= args.until]
+
+if args.before:
+    before = dateutil.parser.parse(args.before).isoformat()
+    operations = [op for op in operations if op["date"] <= before]
+
+if args.after:
+    after = dateutil.parser.parse(args.after).isoformat()
+    operations = [op for op in operations if op["date"] >= after]
+
 operations.sort(key=lambda o: o["account"])
 
 
