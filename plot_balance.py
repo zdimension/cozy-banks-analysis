@@ -11,23 +11,15 @@ parse_args()
 accounts = get_accounts()
 operations = get_operations()
 
-
-def get_date(o):
-    first = o["date"]
-    if "cozyMetadata" in o:
-        return first, o["cozyMetadata"]["updatedAt"]
-    else:
-        return first, "0"
-
-
-operations.sort(key=get_date)
-
 # plot account balance through time (cumulative sum of operation amount)
 
 # group operations by account
 ops_by_acc = defaultdict(list)
 for o in operations:
     ops_by_acc[o["account"]].append(o)
+    ops_by_acc[None].append(o)
+
+accounts = accounts + [{"_id": None, "__displayLabel": "Total", "balance": sum(a.get("balance", 0) for a in accounts)}]
 
 fig = go.Figure()
 for account in accounts:

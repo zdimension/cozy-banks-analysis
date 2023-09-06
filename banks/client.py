@@ -125,6 +125,14 @@ def get_category(op):
 
     return op.get("automaticCategoryId", "0")
 
+def op_sort_key(o):
+    rawDate = o["date"]
+    updateDate = "0"
+    if "cozyMetadata" in o:
+        updateDate = o["cozyMetadata"]["updatedAt"][:13]  # only get dd/mm/yyyy and hh
+    opAmount = -o["amount"]  # larger operations before smaller ones in case of internal transfer
+    return rawDate, opAmount, updateDate
+
 
 def get_operations():
     res = get_docs("io.cozy.bank.operations")
@@ -136,6 +144,7 @@ def get_operations():
         log("The script will assume the amount is zero.")
     for op in res:
         op["__categoryId"] = get_category(op)
+    res.sort(key=op_sort_key)
     return res
 
 
