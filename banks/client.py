@@ -94,6 +94,21 @@ def delete_many(doctype, docs):
         print(r.text)
         exit(1)
 
+def update_many(doctype, docs):
+    """
+    Update documents
+    """
+    req_url = BASE_URL + "data/" + doctype + "/_bulk_docs"
+    log(req_url)
+    docs = [cozyize(doc) for doc in docs]
+    r = client.post(req_url, json={"docs": docs})
+    log(r)
+
+    if r.status_code != 201:
+        print("Error while updating documents")
+        print(r.text)
+        exit(1)
+
 
 def get_accounts():
     res = get_docs("io.cozy.bank.accounts")
