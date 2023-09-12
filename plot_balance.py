@@ -8,12 +8,17 @@ import plotly.graph_objects as go
 
 from banks.client import get_accounts, get_operations, parser, parse_args
 
-parser.add_argument("--by-op", "-o", help="One point by operation (sensitive to operation time)", action="store_true")
+parser.add_argument("--by-op", "-b", help="One point by operation (sensitive to operation time)", action="store_true")
 parser.add_argument("--exclude", "-x", help="Exclude accounts", nargs="*", action="append")
 parser.add_argument("--exclude-list", help="List accounts for exclusion", action="store_true")
+parser.add_argument("--owner", "-o", help="Only show operations for this owner (first word of account name)")
 args = parse_args()
 accounts = get_accounts()
 operations = get_operations()
+
+if args.owner:
+    args.owner += " "
+    accounts = [a for a in accounts if a["__displayLabel"].startswith(args.owner)]
 
 if args.exclude_list:
     for i, a in enumerate(accounts):
@@ -23,6 +28,9 @@ if args.exclude_list:
 if args.exclude:
     exclude = {int(i) for l in args.exclude for i in l}
     accounts = [a for i, a in enumerate(accounts) if i not in exclude]
+
+acc_ids = {a["_id"] for a in accounts}
+operations = [o for o in operations if o["account"] in acc_ids]
 
 if not args.by_op:
     # for each operation keep only the date component
