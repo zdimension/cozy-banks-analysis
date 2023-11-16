@@ -71,4 +71,7 @@ for acc in accounts:
     table_data.append((acc["__displayLabel"], balance, computed_balance,
                        difference, op_count))
 
+table_data.append(("**** Total ****", sum(a["balance"] for a in accounts),
+                   sum(o["amount"] for o in operations)))
+
 print(tabulate(table_data, headers=headers, floatfmt=".2f"))

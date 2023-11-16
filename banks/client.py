@@ -6,6 +6,7 @@ import tempfile
 
 import requests
 
+from .cozy_data import CAT
 from .env import *
 
 BASE_URL = os.environ.get("BASE_URL")
@@ -140,6 +141,10 @@ def get_category(op):
 
     return op.get("automaticCategoryId", "0")
 
+
+def id_to_dict(l):
+    return {acc["_id"]: acc for acc in l}
+
 def op_sort_key(o):
     rawDate = o["date"]
     updateDate = "0"
@@ -159,6 +164,7 @@ def get_operations():
         log("The script will assume the amount is zero.")
     for op in res:
         op["__categoryId"] = get_category(op)
+        op["__categoryName"] = CAT[op["__categoryId"]]
     res.sort(key=op_sort_key)
     return res
 
