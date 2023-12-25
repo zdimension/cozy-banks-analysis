@@ -6,7 +6,7 @@ from banks.cozy_data import CAT, CATNAMES
 from utils import copy_to_clipboard
 
 
-def sankey(accs, ops, owner=False, balance=False):
+def sankey(accs, ops, owner=False, balance=False, intermed=None):
     if owner:
         for acc in accs:
             acc["owner"] = acc["__displayLabel"].split(" ")[0]
@@ -15,18 +15,24 @@ def sankey(accs, ops, owner=False, balance=False):
             acc["owner"] = "Bank"
 
     accs = {acc["_id"]: acc for acc in accs}
+    icats = set()
 
     mat = defaultdict(lambda: defaultdict(lambda: 0))
     for op in ops:
         try:
-            cat = op["__categoryId"]
-            mat[accs[op["account"]]["owner"]][cat] += op["amount"]
+            cat = CATNAMES[CAT[op["__categoryId"]]]
+            if intermed is not None and (icat := intermed(op)) is not None:
+                icats.add(icat)
+                mat[icat][cat] += op["amount"]
+                mat[accs[op["account"]]["owner"]][(icat, cat)] += op["amount"]
+            else:
+                mat[accs[op["account"]]["owner"]][cat] += op["amount"]
         except:
             raise
 
     res = ""
     for user, cats in mat.items():
-        if balance:
+        if balance and user not in icats:
             total = round(sum(cats.values()), 2)
             if total > 0:
                 res += f"{user} [{total}] Balance {user}\n"
@@ -36,13 +42,19 @@ def sankey(accs, ops, owner=False, balance=False):
             val = round(val, 2)
             if val == 0:
                 continue
-            dst, src = user, CATNAMES[CAT[cat]]
+            if isinstance(cat, tuple):
+                cat = cat[0]
+            dst, src = user, cat
             if val < 0:
                 src = "-" + src
                 src, dst = dst, src
                 val = -val
+                if src in icats:
+                    src = "-" + src
             else:
                 src = "+" + src
+                if dst in icats:
+                    dst = "+" + dst
             res += f"{src} [{round(val, 2)}] {dst}\n"
     return res
 
