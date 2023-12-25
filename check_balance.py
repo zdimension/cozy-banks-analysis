@@ -63,7 +63,7 @@ acc_op = {k: list(v) for k, v in groupby(operations, lambda o: o["account"])}
 
 headers = ["Account", "Balance", "Computed balance", "Difference", "Op count"]
 table_data = []
-for acc in accounts:
+for acc in sorted(accounts, key=lambda a: a["__displayLabel"]):
     balance = acc["balance"]
     computed_balance = sum(u["amount"] for u in acc_op.get(acc["id"], ()))
     difference = round(balance - computed_balance + 1e-7, 2)
