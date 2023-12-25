@@ -97,6 +97,8 @@ CAT = {
     "600170": "savings"
 }
 
+CATID = {v: k for k, v in CAT.items()}
+
 CATNAMES = {
     "potentialTransfer": "Virements à catégoriser",
     "check": "Chèques",

@@ -34,8 +34,8 @@ def update_token(force=False):
         except:
             print("Unable to delete ACH token file")
         cmdline = [
-            ACH_PATH, "token", "--url", BASE_URL, "io.cozy.bank.accounts",
-            "io.cozy.bank.operations"
+            ACH_PATH, "token", "--url", BASE_URL,
+            "io.cozy.bank.accounts", "io.cozy.bank.operations", "io.cozy.tags"
         ]
         try:
             token = subprocess.check_output(
@@ -166,6 +166,11 @@ def get_operations():
         op["__categoryId"] = get_category(op)
         op["__categoryName"] = CAT[op["__categoryId"]]
     res.sort(key=op_sort_key)
+    return res
+
+
+def get_tags():
+    res = get_docs("io.cozy.tags")
     return res
 
 
