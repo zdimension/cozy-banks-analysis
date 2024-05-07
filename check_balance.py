@@ -24,6 +24,18 @@ parser.add_argument(
     "Convert currencies to EUR. Note that this will not be completely acurate.",
     action="store_true")
 
+parser.add_argument(
+    "--show-zero",
+    help="Show accounts with zero balance",
+    action="store_true")
+
+parser.add_argument(
+    "--only-different"
+    "-d",
+    help="Only show accounts with a difference between computed and stored balance",
+    action="store_true"
+)
+
 args = parse_args()
 accounts = get_accounts()
 operations = get_operations()
@@ -61,13 +73,22 @@ if args.curconv:
 
 acc_op = {k: list(v) for k, v in groupby(operations, lambda o: o["account"])}
 
+def round2(x):
+    return round(x + 1e-7, 2)
+
 headers = ["Account", "Balance", "Computed balance", "Difference", "Op count"]
 table_data = []
 for acc in sorted(accounts, key=lambda a: a["__displayLabel"]):
-    balance = acc["balance"]
-    computed_balance = sum(u["amount"] for u in acc_op.get(acc["id"], ()))
-    difference = round(balance - computed_balance + 1e-7, 2)
+    balance = acc["balance"] + 0.0001
+    computed_balance = sum(u["amount"] for u in acc_op.get(acc["id"], ())) + 0.0001
+    difference = round2(balance - computed_balance)
     op_count = len(acc_op.get(acc["id"], ()))
+    balance = round2(balance)
+    computed_balance = round2(balance)
+    if (balance == computed_balance == 0) and not args.show_zero:
+        continue
+    if (balance == computed_balance) and args.only_different_d:
+        continue
     table_data.append((acc["__displayLabel"], balance, computed_balance,
                        difference, op_count))
 
