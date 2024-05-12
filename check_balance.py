@@ -84,7 +84,7 @@ for acc in sorted(accounts, key=lambda a: a["__displayLabel"]):
     difference = round2(balance - computed_balance)
     op_count = len(acc_op.get(acc["id"], ()))
     balance = round2(balance)
-    computed_balance = round2(balance)
+    computed_balance = round2(computed_balance)
     if (balance == computed_balance == 0) and not args.show_zero:
         continue
     if (balance == computed_balance) and args.only_different_d:
