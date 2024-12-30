@@ -12,7 +12,9 @@ if args.account is None:
 
 account = get_accounts()[int(args.account)]
 
-ops = (o for o in get_operations() if o["account"] == account["_id"])
+ops = [o for o in get_operations() if o["account"] == account["_id"]]
+
+ops.sort(key=lambda o: (o["date"], o["originalBankLabel"]))
 
 df = pd.DataFrame([
     [o["date"], o["label"], o["amount"]] for o in ops
