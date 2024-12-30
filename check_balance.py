@@ -21,7 +21,7 @@ parser.add_argument(
     "--curconv",
     "-C",
     help=
-    "Convert currencies to EUR. Note that this will not be completely acurate.",
+    "Convert currencies to EUR. Note that this will not be completely accurate.",
     action="store_true")
 
 parser.add_argument(
