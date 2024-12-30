@@ -6,7 +6,7 @@ from itertools import groupby
 import numpy as np
 import plotly.graph_objects as go
 
-from banks.client import get_accounts, get_operations, parser, parse_args
+from banks.client import get_accounts, get_operations, parser, parse_args, get_balance_histories
 
 parser.add_argument("--by-op", "-b", help="One point by operation (sensitive to operation time)", action="store_true")
 parser.add_argument("--exclude", "-x", help="Exclude accounts", nargs="*", action="append")
@@ -56,23 +56,38 @@ if not args.by_op:
     for k, v in ops_by_acc.items():
         ops_by_acc[k] = [{"date": k, "amount": sum(o["amount"] for o in g)} for k, g in groupby(v, lambda o: o["date"])]
 
+accounts.sort(key=lambda a: a["__displayLabel"])
+
 accounts.append({"_id": None, "__displayLabel": "Total", "balance": sum(a.get("balance", 0) for a in accounts)})
 
 if args.owner_totals:
     for owner, accs in owners.items():
         accounts.append({"_id": owner, "__displayLabel": f"{owner} total", "balance": sum(a.get("balance", 0) for a in accs)})
 
+histories = get_balance_histories()
 
 fig = go.Figure()
 for account in accounts:
     # get operations for this account
     account_operations = ops_by_acc[account["_id"]]
-    # compute cumulative sum of operation amount
-    y = np.cumsum([o["amount"] for o in account_operations])
-    y = np.append(y, account["balance"])
-    # plot
-    x = [np.datetime64(o["date"]) for o in account_operations]
-    x.append(np.datetime64(datetime.now().isoformat()))
+
+    cum = np.cumsum([o["amount"] for o in account_operations])
+    by_date = {o["date"]: cumulated for o, cumulated in zip(account_operations, cum)}
+
+    if account.get("type") == "LongTermSavings" and (acc_hist := histories.get(account["_id"])):
+        for date, balance in acc_hist.items():
+            by_date[date] = balance
+
+    by_date = dict(sorted(by_date.items(), key=lambda x: x[0]))
+
+    y = list(by_date.values())
+    x = [np.datetime64(d) for d in by_date.keys()]
+
+    now = np.datetime64(datetime.now().isoformat())
+    if now > x[-1]:
+        x.append(now)
+        y.append(account["balance"])
+
     # step chart
     fig.add_trace(
         go.Scatter(
