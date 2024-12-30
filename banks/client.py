@@ -3,6 +3,7 @@ import os
 import pathlib
 import subprocess
 import tempfile
+from collections import defaultdict
 
 import requests
 
@@ -35,7 +36,7 @@ def update_token(force=False):
             print("Unable to delete ACH token file")
         cmdline = [
             ACH_PATH, "token", "--url", BASE_URL,
-            "io.cozy.bank.accounts", "io.cozy.bank.operations", "io.cozy.tags"
+            "io.cozy.bank.accounts", "io.cozy.bank.operations", "io.cozy.tags", "io.cozy.bank.balancehistories"
         ]
         try:
             token = subprocess.check_output(
@@ -117,6 +118,14 @@ def get_accounts():
         acc["__displayLabel"] = acc.get("shortLabel",
                                         acc.get("label", "<NO LABEL>"))
     return res
+
+
+def get_balance_histories():
+    res = get_docs("io.cozy.bank.balancehistories")
+    by_acc = defaultdict(dict)
+    for bh in res:
+        by_acc[bh["relationships"]["account"]["data"]["_id"]].update(bh["balances"])
+    return by_acc
 
 
 def get_category(op):
